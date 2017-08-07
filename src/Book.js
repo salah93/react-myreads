@@ -19,7 +19,11 @@ class BookItem extends React.Component {
           </div>
           <div className="book-title">{this.props.title}</div>
           <div className="book-authors">
-            <span>{this.props.authors.join(', ')}</span>
+      <p>
+      Authors:
+      </p>
+
+            <span>{this.props.authors}</span>
       </div>
         </div>
       </li>
