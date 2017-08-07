@@ -7,7 +7,7 @@ class BooksGrid extends React.Component {
     return (
       <ol className="books-grid">
         { books.map((b) => (
-          <BookItem cover={b.imageLinks.thumbnail} title={b.title} authors={b.authors} />
+          <BookItem updateBook={this.props.updateBook} book={ b } />
         )) }
       </ol>
     )}

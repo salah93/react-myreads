@@ -7,15 +7,10 @@ import BooksGrid from './BooksGrid'
 
 class BooksApp extends React.Component {
   constructor() {
-    super() 
+    super()
     this.updateValue = this.updateValue.bind(this)
+    this.updateBook = this.updateBook.bind(this)
     this.state = {
-      /**
-      * TODO: Instead of using this state variable to keep track of which page
-      * we're on, use the URL in the browser's address bar. This will ensure that
-      * users can use the browser's back and forward buttons to navigate between
-      * pages, as well as provide a good URL they can bookmark and share.
-      */
       value: '',
       searchBooks: [],
       currentlyReading: [],
@@ -37,13 +32,49 @@ class BooksApp extends React.Component {
     })
   }
 
-  updateValue(value) {
-    BooksAPI.search(value).then((searchBooks) => {
-      this.setState({
-        value,
-        searchBooks
-      }) 
+  updateBook(book, shelf) {
+    BooksAPI.update(book, shelf)
+    var {currentlyReading, read, wantToRead} = this.state
+    var shelves = [currentlyReading, read, wantToRead]
+    var currentShelf = this.state[shelf]
+    book.shelf = shelf
+    shelves.map((shelf) => {
+      if (shelf !== currentShelf) {
+        return shelf.filter((b) => b.id !== book.id)
+      }
+      else {
+        return shelf.concat([book])
+      }
     })
+    this.setState({
+      currentlyReading: shelves[0],
+      read: shelves[1],
+      wantToRead: shelves[2]
+    })
+  }
+
+
+
+  updateValue(val) {
+    const value = val.trim()
+    this.setState({
+      value: value
+    })
+    console.log(value)
+    if (value != '') {
+      BooksAPI.search(value).then((searchBooks) => {
+        if (Object.prototype.toString.call(searchBooks) !== '[object Array]')
+          searchBooks = []
+        this.setState({
+          searchBooks
+        })
+      })
+    }
+    else {
+      this.setState({
+        searchBooks: []
+      })
+    }
   }
 
   render() {
@@ -55,6 +86,7 @@ class BooksApp extends React.Component {
               <Link
                 to={{
                   pathname: '/',
+                  state: { value: '', searchBooks: [] }
                 }}
                 className="close-search"
               >Close</Link>
@@ -63,7 +95,7 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <BooksGrid books={this.state.searchBooks}/>
+              <BooksGrid updateBook={this.updateBook} books={this.state.searchBooks}/>
             </div>
           </div>
         )} />
@@ -77,25 +109,31 @@ class BooksApp extends React.Component {
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <div className="bookshelf-books">
-                    <BooksGrid books={this.state.currentlyReading} />
+                    <BooksGrid updateBook={this.updateBook} books={this.state.currentlyReading} />
                   </div>
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <div className="bookshelf-books">
-                    <BooksGrid books={this.state.wantToRead} />
+                    <BooksGrid updateBook={this.updateBook} books={this.state.wantToRead} />
                   </div>
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
                   <div className="bookshelf-books">
-                    <BooksGrid books={this.state.read} />
+                    <BooksGrid updateBook={this.updateBook} books={this.state.read} />
                   </div>
                 </div>
               </div>
             </div>
             <div className="open-search">
-              <Link to="/search">Add a book</Link>
+              <Link
+                to={{
+                  pathname: '/search',
+                  state: { value: '', searchBooks: [] }
+                }}
+                className="open-search"
+              >Add a book</Link>
             </div>
           </div>
         )} />
