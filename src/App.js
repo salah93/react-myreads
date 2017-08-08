@@ -61,7 +61,7 @@ class BooksApp extends React.Component {
       value: value
     })
     console.log(value)
-    if (value != '') {
+    if (value !== '') {
       BooksAPI.search(value).then((searchBooks) => {
         if (Object.prototype.toString.call(searchBooks) !== '[object Array]')
           searchBooks = []
