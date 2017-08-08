@@ -7,7 +7,7 @@ class BooksGrid extends React.Component {
     return (
       <ol className="books-grid">
         { books.map((b) => (
-          <BookItem updateBook={this.props.updateBook} book={ b } />
+          <BookItem key={ b.id } updateBook={this.props.updateBook} book={ b } />
         )) }
       </ol>
     )}
