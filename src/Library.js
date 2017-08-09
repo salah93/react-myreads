@@ -46,16 +46,14 @@ class Library extends React.Component {
         </div>
         <div className="list-books-content">
           <div>
-              <BooksGrid library={ true } shelf="Currently Reading" updateBook={this.props.updateLibrary} books={this.state.currentlyReading} />
-              <BooksGrid library={ true } shelf="Want to Read" updateBook={this.props.updateLibrary} books={this.state.wantToRead} />
-              <BooksGrid library={ true } shelf="Read" updateBook={this.props.updateLibrary} books={this.state.read} />
+            <BooksGrid library={ true } shelf="Currently Reading" updateBook={ this.props.updateLibrary } books={ this.state.currentlyReading } />
+            <BooksGrid library={ true } shelf="Want to Read" updateBook={ this.props.updateLibrary } books={ this.state.wantToRead } />
+            <BooksGrid library={ true } shelf="Read" updateBook={ this.props.updateLibrary } books={ this.state.read } />
           </div>
         </div>
         <div className="open-search">
           <Link
-            to={{
-              pathname: '/search',
-            }}
+            to='/search'
             className="open-search"
           >Add a book</Link>
         </div>

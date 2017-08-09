@@ -69,12 +69,8 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        <Route path="/search" exact render={ () => (
-          <SearchPage updateLibrary={ this.updateLibrary } />
-        )} />
-        <Route path="/" exact render={ () => (
-          <Library updateLibrary={ this.updateLibrary } books={ this.state.books.sort(sortBy('title')) }/>
-        )} />
+        <Route exact path="/" render={ () => <Library updateLibrary={ this.updateLibrary } books={ this.state.books.sort(sortBy('title')) }/> }/>
+        <Route exact path="/search" render={ () => <SearchPage updateLibrary={ this.updateLibrary } /> }/>
       </div>
     )
   }

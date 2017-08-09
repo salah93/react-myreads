@@ -1,6 +1,5 @@
 import React from 'react'
 import BookItem from './Book'
-import * as BooksAPI from './BooksAPI'
 
 class BooksGrid extends React.Component {
   render() {
