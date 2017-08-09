@@ -28,7 +28,6 @@ class Library extends React.Component {
   componentDidMount() {
     const books = this.props.books
     this.updateBooks(books)
-    
   }
 
   /**
