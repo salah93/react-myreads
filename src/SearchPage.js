@@ -1,8 +1,9 @@
 import React from 'react'
-import BooksGrid from './BooksGrid'
 import { Link } from 'react-router-dom'
-import SearchBar from './SearchBar'
 import * as BooksAPI from './BooksAPI'
+import BooksGrid from './BooksGrid'
+import SearchBar from './SearchBar'
+
 
 class SearchPage extends React.Component {
   constructor() {
@@ -25,9 +26,9 @@ class SearchPage extends React.Component {
       BooksAPI.search(value).then((result) => {
         if (Object.prototype.toString.call(result) === '[object Array]')
           searchBooks = result
-          this.setState({
-            searchBooks
-          })
+        this.setState({
+          searchBooks
+        })
       })
     }
     else {
@@ -49,10 +50,7 @@ class SearchPage extends React.Component {
       <div className="search-books">
         <div className="search-books-bar">
           <Link
-            to={{
-              pathname: '/',
-              state: { value: '', searchBooks: [] }
-            }}
+            to='/'
             className="close-search"
           >Close</Link>
           <div className="search-books-input-wrapper">
@@ -66,5 +64,6 @@ class SearchPage extends React.Component {
     )  
   }
 }
+
 
 export default SearchPage

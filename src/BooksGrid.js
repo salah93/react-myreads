@@ -1,6 +1,7 @@
 import React from 'react'
 import BookItem from './Book'
 
+
 class BooksGrid extends React.Component {
   render() {
     const books = this.props.books || []
@@ -17,5 +18,6 @@ class BooksGrid extends React.Component {
       </div>
     )}
 }
+
 
 export default BooksGrid

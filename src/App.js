@@ -1,10 +1,10 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
+import sortBy from 'sort-by'
 import './App.css'
 import * as BooksAPI from './BooksAPI'
-import SearchPage from './SearchPage'
 import Library from './Library'
-import sortBy from 'sort-by'
+import SearchPage from './SearchPage'
 
 
 class BooksApp extends React.Component {
@@ -13,7 +13,6 @@ class BooksApp extends React.Component {
     this.updateLibrary = this.updateLibrary.bind(this)
     this.state = {
       books: [],
-      update: false
     }
   }
 
@@ -25,43 +24,21 @@ class BooksApp extends React.Component {
     })
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const nextBooks = nextState.books
-    const nextBooksLength = nextBooks.length
-    const thisBooks = this.state.books
-    const thisBooksLength = thisBooks.length
-    /*
-     * after mount books is set to new length
-     * will update api when no need to
-     */
-    if (nextBooksLength !== thisBooksLength)
-      return true
-    for (let i = 0; i < nextBooksLength; i++){
-      if (nextBooks[i].id !== thisBooks[i].id || nextBooks[i].shelf !== thisBooks[i].shelf)
-        return true
-    }
-    return false
-  }
-
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.update !== false) {
-      let added_book = this.state.books.filter(x => prevState.books.indexOf(x) === -1)[0];
-      BooksAPI.update(added_book, added_book.shelf)
+    let added_book = this.state.books.filter(x => prevState.books.indexOf(x) === -1)
+    if (added_book.length === 1) {
+      BooksAPI.update(added_book[0], added_book[0].shelf)
     }
   }
 
   updateLibrary(book, new_shelf_name) {
     let b = {};
     for(let key in book){
-      if (key === 'shelf')
-        b[key] = new_shelf_name
-      else
-        b[key] = book[key]
+      b[key] = (key === 'shelf' ? new_shelf_name : book[key])
     }
     this.setState((oldState) => {
       return {
         books:  (oldState.books.filter((b) => b.id !== book.id).concat([b])),
-        update: true
       }
     })
   }
@@ -75,5 +52,6 @@ class BooksApp extends React.Component {
     )
   }
 }
+
 
 export default BooksApp
