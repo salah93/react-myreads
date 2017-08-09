@@ -2,6 +2,9 @@ import React from 'react'
 
 
 class BookItem extends React.Component {
+  /**
+   * A component rendering a book
+   **/
   render() {
     return (
       <li>
@@ -30,4 +33,4 @@ class BookItem extends React.Component {
 }
 
 
-export default BookItem
+export default BookItem;

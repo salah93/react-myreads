@@ -5,4 +5,4 @@ import BooksApp from './App'
 import './index.css'
 
 
-ReactDOM.render(<BrowserRouter><BooksApp /></BrowserRouter>, document.getElementById('root'))
+ReactDOM.render(<BrowserRouter><BooksApp /></BrowserRouter>, document.getElementById('root'));

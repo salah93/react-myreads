@@ -4,38 +4,49 @@ import BooksGrid from './BooksGrid'
 
 
 class Library extends React.Component {
+  /**
+   * This component will have a state object keeping track of different shelves
+   *
+   *
+   **/
   constructor() {
-    super()
+    super();
     this.updateBooks = this.updateBooks.bind(this);
     this.state = {
       currentlyReading: [],
       read: [],
       wantToRead: []
-    }
+    };
   }
 
+  /*
+   * State depends on props
+   */
   updateBooks(books) {
-    const currentlyReading = books.filter((b) => b.shelf === 'currentlyReading')
-    const read = books.filter((b) => b.shelf === 'read')
-    const wantToRead = books.filter((b) => b.shelf === 'wantToRead')
+    const currentlyReading = books.filter((b) => b.shelf === 'currentlyReading');
+    const read = books.filter((b) => b.shelf === 'read');
+    const wantToRead = books.filter((b) => b.shelf === 'wantToRead');
     this.setState({
       currentlyReading,
       read,
       wantToRead
-    })
+    });
   }
 
+  /*
+   * Render shelves
+   */
   componentDidMount() {
-    const books = this.props.books
-    this.updateBooks(books)
+    const books = this.props.books;
+    this.updateBooks(books);
   }
 
-  /**
-   * handling when this.props.books changes
+  /*
+   * update shelves when a book is moved or added to library
    */
   componentWillReceiveProps(nextProps, nextState) {
-    const books = nextProps.books
-    this.updateBooks(books)
+    const books = nextProps.books;
+    this.updateBooks(books);
   }
 
   render() {
@@ -63,4 +74,4 @@ class Library extends React.Component {
 }
 
 
-export default Library
+export default Library;
