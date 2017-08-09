@@ -15,26 +15,24 @@ class SearchPage extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextState.value.trim() !== this.state.value
-  }
-
   componentDidUpdate(prevProps, prevState) {
     const value = this.state.value.trim()
     var searchBooks = []
-    if (value !== '') {
-      BooksAPI.search(value).then((result) => {
-        if (Object.prototype.toString.call(result) === '[object Array]')
-          searchBooks = result
+    if (value !== prevState.value) {
+      if (value !== '') {
+        BooksAPI.search(value).then((result) => {
+          if (Object.prototype.toString.call(result) === '[object Array]')
+            searchBooks = result
+          this.setState({
+            searchBooks
+          })
+        })
+      }
+      else {
         this.setState({
           searchBooks
         })
-      })
-    }
-    else {
-      this.setState({
-        searchBooks
-      })
+      }
     }
   }
 

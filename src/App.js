@@ -33,9 +33,10 @@ class BooksApp extends React.Component {
 
   updateLibrary(book, new_shelf_name) {
     let b = {};
-    for(let key in book){
-      b[key] = (key === 'shelf' ? new_shelf_name : book[key])
+    for(let key in book) {
+      b[key] = book[key]
     }
+    b['shelf'] = new_shelf_name
     this.setState((oldState) => {
       return {
         books:  (oldState.books.filter((b) => b.id !== book.id).concat([b])),
