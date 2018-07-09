@@ -1,10 +1,10 @@
-import React from 'react'
-import { Route } from 'react-router-dom'
-import sortBy from 'sort-by'
-import './App.css'
-import * as BooksAPI from './BooksAPI'
-import Library from './Library'
-import SearchPage from './SearchPage'
+import React from 'react';
+import {Route} from 'react-router-dom';
+import sortBy from 'sort-by';
+import './App.css';
+import * as BooksAPI from './BooksAPI';
+import Library from './Library';
+import SearchPage from './SearchPage';
 
 
 class BooksApp extends React.Component {
@@ -14,13 +14,9 @@ class BooksApp extends React.Component {
    *
    * if a book is added or updated, it will update other components
    **/
-  constructor() {
-    super();
-    this.updateLibrary = this.updateLibrary.bind(this);
-    this.state = {
-      books: [],
-    };
-  }
+  state = {
+    books: [],
+  };
 
   /*
    * when componen is mounted, make a network request to update state
@@ -28,9 +24,17 @@ class BooksApp extends React.Component {
    * This is done only once for efficiency
    */
   componentDidMount() {
-    BooksAPI.getAll().then((books) => {
+    BooksAPI.getAll().then((all) => {
+      console.log('here');
+      const books = all.filter(b => b.shelf !== 'none');
+      const shelves = all.map(b => b.shelf);
+      console.log(all);
+      console.log('here');
+      console.log(shelves);
+      console.log('here');
+      console.log(books);
       this.setState({
-        books
+        books,
       });
     });
   }
@@ -40,35 +44,44 @@ class BooksApp extends React.Component {
    * a book added or moved between shelves, update API
    */
   componentDidUpdate(prevProps, prevState) {
-    const added_book = this.state.books.filter(x => prevState.books.indexOf(x) === -1);
-    if (added_book.length === 1) {
-      BooksAPI.update(added_book[0], added_book[0].shelf);
+    const addedBook = this.state.books.filter(
+      book => prevState.books.indexOf(book) === -1);
+    if (addedBook.length === 1) {
+      BooksAPI.update(addedBook[0], addedBook[0].shelf);
     }
   }
 
   /*
    * when a book is added or moved between shelves update state
    */
-  updateLibrary(book, new_shelf_name) {
+  updateLibrary(book, newShelfName) {
     const b = {};
-    for(const key in book) {
+    for (const key in book) {
       b[key] = book[key];
     }
-    b['shelf'] = new_shelf_name;
+    b['shelf'] = newShelfName;
     this.setState((oldState) => {
       return {
-        books:  (oldState.books.filter((b) => b.id !== book.id).concat([b])),
-      }
+        books: (oldState.books.filter(
+          (b) => b['ASIN/ISBN'] !== book['ASIN/ISBN']).concat([b])),
+      };
     });
   }
 
   render() {
     return (
       <div className="app">
-        <Route exact path="/" render={ () => <Library updateLibrary={ this.updateLibrary } books={ this.state.books.sort(sortBy('title')) }/> }/>
-        <Route exact path="/search" render={ () => <SearchPage updateLibrary={ this.updateLibrary } /> }/>
+        <Route exact path="/" render={ () =>
+          <Library
+            updateLibrary={ (book, shelf) => this.updateLibrary(book, shelf) }
+            books={ this.state.books.sort(sortBy('Title')) }/>
+         }/>
+        <Route exact path="/search" render={ () =>
+          <SearchPage
+            updateLibrary={ (book, shelf) => this.updateLibrary(book, shelf) }
+          /> }/>
       </div>
-    )
+    );
   }
 }
 

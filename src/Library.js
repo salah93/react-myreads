@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import BooksGrid from './BooksGrid'
+import React from 'react';
+import {Link} from 'react-router-dom';
+import BooksGrid from './BooksGrid';
 
 
 class Library extends React.Component {
@@ -9,13 +9,14 @@ class Library extends React.Component {
    *
    *
    **/
-  constructor() {
-    super();
-    this.updateBooks = this.updateBooks.bind(this);
+  constructor(props) {
+    super(props);
+    const {books} = this.props;
+    const {currentlyReading, read, wantToRead} = this.updateBooks(books);
     this.state = {
-      currentlyReading: [],
-      read: [],
-      wantToRead: []
+      currentlyReading,
+      read,
+      wantToRead,
     };
   }
 
@@ -23,33 +24,39 @@ class Library extends React.Component {
    * State depends on props
    */
   updateBooks(books) {
-    const currentlyReading = books.filter((b) => b.shelf === 'currentlyReading');
-    const read = books.filter((b) => b.shelf === 'read');
-    const wantToRead = books.filter((b) => b.shelf === 'wantToRead');
-    this.setState({
-      currentlyReading,
-      read,
-      wantToRead
-    });
+    const currentlyReading = books.filter(
+      (b) => b.shelf === 'currentlyReading');
+    const read = books.filter(
+      (b) => b.shelf === 'read');
+    const wantToRead = books.filter(
+      (b) => b.shelf === 'wantToRead');
+    return {currentlyReading, read, wantToRead};
   }
 
   /*
    * Render shelves
+    componentDidMount() {
+      const books = this.props.books;
+      this.updateBooks(books);
+    }
    */
-  componentDidMount() {
-    const books = this.props.books;
-    this.updateBooks(books);
-  }
 
   /*
    * update shelves when a book is moved or added to library
    */
   componentWillReceiveProps(nextProps, nextState) {
     const books = nextProps.books;
-    this.updateBooks(books);
+    const {currentlyReading, read, wantToRead} = this.updateBooks(books);
+    this.setState({
+      currentlyReading,
+      read,
+      wantToRead,
+    });
   }
 
   render() {
+    const {currentlyReading, read, wantToRead} = this.state;
+    const {updateLibrary} = this.props;
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -57,9 +64,15 @@ class Library extends React.Component {
         </div>
         <div className="list-books-content">
           <div>
-            <BooksGrid shelf="Currently Reading" updateBook={ this.props.updateLibrary } books={ this.state.currentlyReading } />
-            <BooksGrid shelf="Want to Read" updateBook={ this.props.updateLibrary } books={ this.state.wantToRead } />
-            <BooksGrid shelf="Read" updateBook={ this.props.updateLibrary } books={ this.state.read } />
+            <BooksGrid shelf="Currently Reading"
+              updateBook={ (book, shelf) => updateLibrary(book, shelf) }
+              books={ currentlyReading } />
+            <BooksGrid shelf="Want to Read"
+              updateBook={ (book, shelf) => updateLibrary(book, shelf) }
+              books={ wantToRead } />
+            <BooksGrid shelf="Read"
+              updateBook={ (book, shelf) => updateLibrary(book, shelf) }
+              books={ read } />
           </div>
         </div>
         <div className="open-search">
@@ -69,7 +82,7 @@ class Library extends React.Component {
           >Add a book</Link>
         </div>
       </div>
-    )
+    );
   }
 }
 

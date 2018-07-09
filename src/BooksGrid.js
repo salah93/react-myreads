@@ -1,5 +1,5 @@
-import React from 'react'
-import BookItem from './Book'
+import React from 'react';
+import BookItem from './Book';
 
 
 class BooksGrid extends React.Component {
@@ -14,12 +14,15 @@ class BooksGrid extends React.Component {
         <div className="bookshelf-books">
           <ol className="books-grid">
             { books.map((b) => (
-              <BookItem key={ b.id } updateBook={this.props.updateBook} book={ b } />
-        )) }
+              <BookItem key={ b.Title }
+                updateBook={(book, shelf) => this.props.updateBook(book, shelf)}
+                book={ b } />
+            )) }
           </ol>
         </div>
       </div>
-    )}
+    );
+  }
 }
 
 

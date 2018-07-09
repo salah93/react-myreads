@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 
 class BookItem extends React.Component {
@@ -6,13 +6,23 @@ class BookItem extends React.Component {
    * A component rendering a book
    **/
   render() {
+    const {book, updateBook} = this.props;
     return (
       <li>
         <div className="book">
           <div className="book-top">
-            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks.thumbnail})` }}></div>
+            <div className="book-cover"
+                style={{width: 128,
+                        height: 193,
+                        /*
+                         * backgroundImage:
+                         * `url(${book.imageLinks.thumbnail})`}}>
+                         */
+                        backgroundImage: `url(${book.cover})`}}>
+            </div>
             <div className="book-shelf-changer">
-              <select onClick={ (event) => this.props.updateBook(this.props.book, event.target.value) }>
+              <select
+                onClick={ (event) => updateBook(book, event.target.value) }>
                 <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
@@ -21,14 +31,14 @@ class BookItem extends React.Component {
               </select>
             </div>
           </div>
-          <div className="book-title">{this.props.book.title}</div>
+          <div className="book-title">{book.Title}</div>
           <div className="book-authors">
             <p>Authors:</p>
-            <span>{this.props.book.authors}</span>
+            <span>{book.authors}</span>
           </div>
         </div>
       </li>
-    )
+    );
   }
 }
 

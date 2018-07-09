@@ -1,8 +1,7 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import * as BooksAPI from './BooksAPI'
-import BooksGrid from './BooksGrid'
-import SearchBar from './SearchBar'
+import React from 'react';
+import {Link} from 'react-router-dom';
+import * as BooksAPI from './BooksAPI';
+import BooksGrid from './BooksGrid';
 
 
 class SearchPage extends React.Component {
@@ -12,36 +11,28 @@ class SearchPage extends React.Component {
    *  It houses a state object that keeps track of query in input,
    *   as well as the resulting search results from network call
    **/
-  constructor() {
-    super();
-    this.updateValue = this.updateValue.bind(this);
-    this.state = {
-      value: '',
-      searchBooks: [],
-    };
-  }
+  state = {
+    value: '',
+    searchBooks: [],
+  };
 
   /*
    * when value is updated search for related books in network request
    */
   componentDidUpdate(prevProps, prevState) {
-    const value = this.state.value.trim();
+    const value = this.state.value.trim().toLowerCase();
     let searchBooks = [];
     if (value !== prevState.value) {
       if (value !== '') {
-        BooksAPI.search(value).then((result) => {
-          // make sure result is array, if not there were no results found
-          if (Object.prototype.toString.call(result) === '[object Array]')
-            searchBooks = result;
+        BooksAPI.search(value, 10).then((searchBooks) => {
           this.setState({
-            searchBooks
+            searchBooks,
           });
-        })
-      }
-      else {
+        });
+      } else {
         // this means user deleted query, reflect that change
         this.setState({
-          searchBooks
+          searchBooks,
         });
       }
     }
@@ -50,11 +41,12 @@ class SearchPage extends React.Component {
   updateValue(val) {
     const value = val.trim();
     this.setState({
-      value
+      value,
     });
   }
 
   render() {
+    const {value, searchBooks} = this.state;
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -63,14 +55,20 @@ class SearchPage extends React.Component {
             className="close-search"
           >Close</Link>
           <div className="search-books-input-wrapper">
-        <SearchBar value={ this.state.value } updateValue={ this.updateValue }/>
+        <input type="text"
+          value={value}
+          onChange={(e) =>
+            this.updateValue(e.target.value)}
+          placeholder="Search by title or author"/>
           </div>
         </div>
         <div className="search-books-results">
-          <BooksGrid updateBook={this.props.updateLibrary} books={this.state.searchBooks}/>
+          <BooksGrid
+            updateBook={(book, shelf) => this.props.updateLibrary(book, shelf)}
+            books={searchBooks}/>
         </div>
       </div>
-    )  
+    );
   }
 }
 
